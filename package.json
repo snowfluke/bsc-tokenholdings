@@ -1,0 +1,30 @@
+{
+  "name": "bsc-tokenholdings",
+  "version": "1.0.0",
+  "description": "NPM pakcage to scan token holdings in a Binance Smart Chain (BSC) Wallet Address",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/snowfluke/bsc-tokenholdings.git"
+  },
+  "keywords": [
+    "bsc",
+    "tokeholdings",
+    "bnb",
+    "smart-chain"
+  ],
+  "author": "Awal Ariansyah <awalariansyah7@gmail.com> (https://snowfluke.github.io/)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/snowfluke/bsc-tokenholdings/issues"
+  },
+  "homepage": "https://github.com/snowfluke/bsc-tokenholdings#readme",
+  "dependencies": {
+    "axios": "^0.25.0",
+    "cheerio": "^1.0.0-rc.10",
+    "multicoin-address-validator": "^0.5.8"
+  }
+}
