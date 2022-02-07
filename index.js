@@ -70,14 +70,19 @@ const scan = async (address, currency) => {
     let tr = $("tr");
     let len = tr.length;
 
-    let wallet = { totalValue: tempusd, currency: type, status: true, address };
+    let wallet = {
+      totalValue: tempusd.replace("$", ""),
+      currency: type,
+      status: true,
+      address,
+    };
 
     for (let i = 0; i < len; i++) {
       let tokenName =
         $(tr[i].children["2"])["0"].children[0]?.attribs?.title ||
         $(tr[i].children["2"]).text();
       let balance = $(tr[i].children["3"]).text();
-      let balanceInUsd = $(tr[i].children["7"]).text();
+      let balanceInUsd = $(tr[i].children["7"]).text().replace("$", "");
       wallet[tokenName] = { balance, balance_in_usd: balanceInUsd };
     }
 
