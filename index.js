@@ -93,8 +93,7 @@ const scan = async (address, currency) => {
     tempusd = "";
     return wallet;
   } catch (error) {
-    console.log(error);
-    return { status: false, error_msg: error.message };
+    return { status: false, error_msg: "Empty wallet" };
   }
 };
 

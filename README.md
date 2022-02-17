@@ -6,6 +6,14 @@ NPM package to scan token holdings in a Binance Smart Chain (BSC) Wallet Address
 
 Now you can scan bsc, eth and matic wallet all in one package.
 
+# Instalation
+
+`npm i bsc-tokenholdings`
+
+Or
+
+`yarn add bsc-tokenholdings`
+
 ## Usage
 
 ```js
