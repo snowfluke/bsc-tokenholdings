@@ -27,26 +27,30 @@ const getPrice = async (type) => {
 };
 
 const fetchToken = async (address, type) => {
-  const { price_usd } = await getPrice(type);
-  if (!price_usd)
-    return { status: false, error_msg: `Failed to fetch ${type} price` };
+  try {
+    const { price_usd } = await getPrice(type);
+    if (!price_usd)
+      return { status: false, error_msg: `Failed to fetch ${type} price` };
 
-  const { data } = await axios.post(
-    "https://apius.reqbin.com/api/v1/requests",
-    {
-      id: "0",
-      name: "",
-      errors: "",
-      json: `{"method":"GET","url":"${types[type].site}/tokenholdingsHandler.aspx?&a=${address}&q=&p=1&f=0&h=0&sort=total_price_usd&order=desc&pUsd=${price_usd}&fav=&langMsg=A%20total%20of%20XX%20tokenSS%20found","apiNode":"US","contentType":"","content":"","headers":"","errors":"","curlCmd":"","codeCmd":"","lang":"","auth":{"auth":"noAuth","bearerToken":"","basicUsername":"","basicPassword":"","customHeader":"","encrypted":""},"compare":false,"idnUrl":"${types[type].site}/tokenholdingsHandler.aspx?&a=${address}&q=&p=1&f=0&h=0&sort=total_price_usd&order=desc&pUsd=${price_usd}&fav=&langMsg=A%20total%20of%20XX%20tokenSS%20found"}`,
-      deviceId: "",
-      sessionId: "",
-    }
-  );
+    const { data } = await axios.post(
+      "https://apius.reqbin.com/api/v1/requests",
+      {
+        id: "0",
+        name: "",
+        errors: "",
+        json: `{"method":"GET","url":"${types[type].site}/tokenholdingsHandler.aspx?&a=${address}&q=&p=1&f=0&h=0&sort=total_price_usd&order=desc&pUsd=${price_usd}&fav=&langMsg=A%20total%20of%20XX%20tokenSS%20found","apiNode":"US","contentType":"","content":"","headers":"","errors":"","curlCmd":"","codeCmd":"","lang":"","auth":{"auth":"noAuth","bearerToken":"","basicUsername":"","basicPassword":"","customHeader":"","encrypted":""},"compare":false,"idnUrl":"${types[type].site}/tokenholdingsHandler.aspx?&a=${address}&q=&p=1&f=0&h=0&sort=total_price_usd&order=desc&pUsd=${price_usd}&fav=&langMsg=A%20total%20of%20XX%20tokenSS%20found"}`,
+        deviceId: "",
+        sessionId: "",
+      }
+    );
 
-  const content = JSON.parse(await data.Content);
+    const content = JSON.parse(await data.Content);
 
-  tempusd = content.totalusd;
-  return cheerio.load(content.layout, null, false);
+    tempusd = content.totalusd;
+    return cheerio.load(content.layout, null, false);
+  } catch (error) {
+    return { status: false, error_msg: "Empty wallet" };
+  }
 };
 
 /**
