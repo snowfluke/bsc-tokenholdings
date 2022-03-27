@@ -1,7 +1,6 @@
 const WAValidator = require("multicoin-address-validator");
 const axios = require("axios").default;
 const cheerio = require("cheerio");
-let tempusd;
 const types = {
   bnb: {
     tickerId: "2710",
@@ -31,23 +30,13 @@ const fetchToken = async (address, type) => {
     const { price_usd } = await getPrice(type);
     if (!price_usd)
       return { status: false, error_msg: `Failed to fetch ${type} price` };
+    // https://bscscan.com/address/0x41bD5eB13b30ffd89AFf8e745f714F5A24F080E0
+    const { data } = await axios.get(`${types[type].site}/address/${address}`);
 
-    const { data } = await axios.post(
-      "https://apius.reqbin.com/api/v1/requests",
-      {
-        id: "0",
-        name: "",
-        errors: "",
-        json: `{"method":"GET","url":"${types[type].site}/tokenholdingsHandler.aspx?&a=${address}&q=&p=1&f=0&h=0&sort=total_price_usd&order=desc&pUsd=${price_usd}&fav=&langMsg=A%20total%20of%20XX%20tokenSS%20found","apiNode":"US","contentType":"","content":"","headers":"","errors":"","curlCmd":"","codeCmd":"","lang":"","auth":{"auth":"noAuth","bearerToken":"","basicUsername":"","basicPassword":"","customHeader":"","encrypted":""},"compare":false,"idnUrl":"${types[type].site}/tokenholdingsHandler.aspx?&a=${address}&q=&p=1&f=0&h=0&sort=total_price_usd&order=desc&pUsd=${price_usd}&fav=&langMsg=A%20total%20of%20XX%20tokenSS%20found"}`,
-        deviceId: "",
-        sessionId: "",
-      }
-    );
+    // const content = JSON.parse(await data.Content);
 
-    const content = JSON.parse(await data.Content);
-
-    tempusd = content.totalusd;
-    return cheerio.load(content.layout, null, false);
+    // tempusd = content.totalusd;
+    return cheerio.load(data, null, false);
   } catch (error) {
     return { status: false, error_msg: "Empty wallet" };
   }
@@ -69,30 +58,34 @@ const scan = async (address, currency) => {
       return { status: false, error_msg: "Invalid type of currency" };
 
     const $ = await fetchToken(address, type);
-    if ($.status === false) return { status: false, error_msg: $.error_msg };
+    // if ($.status === false) return { status: false, error_msg: $.error_msg };
 
-    let tr = $("tr");
+    let usdVal = $("div.col-md-8")["1"].children[0].data;
+    let typeVal = $("div.col-md-8")["0"];
+    let typeBalance = $(typeVal).text().split(" ");
+
+    let tr = $("a.link-hover");
     let len = tr.length;
 
     let wallet = {
-      totalValue: tempusd.replace("$", ""),
+      [typeBalance[1]]: {
+        balance_in_usd: usdVal.replace("$", ""),
+        balance: typeBalance[0],
+      },
       currency: type,
       status: true,
       address,
     };
 
     for (let i = 0; i < len; i++) {
-      let tokenName =
-        $(tr[i].children["2"])["0"].children[0]?.attribs?.title ||
-        $(tr[i].children["2"]).text();
-      let balance = $(tr[i].children["3"]).text();
-      let balanceInUsd = $(tr[i].children["7"]).text().replace("$", "");
-      wallet[tokenName] = { balance, balance_in_usd: balanceInUsd };
+      let token = $(tr[i].children[0].children[1]).text().split(" ");
+
+      wallet[token[1]] = { balance: token[0] };
     }
 
-    tempusd = "";
     return wallet;
   } catch (error) {
+    console.log(error.message);
     return { status: false, error_msg: "Empty wallet" };
   }
 };

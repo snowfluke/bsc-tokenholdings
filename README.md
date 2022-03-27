@@ -44,18 +44,32 @@ test();
 
 // If Success
 {
-    status: true,
-    currency: 'bnb',
-    address: '0x...',
-    totalValue: '203.37', // in usd
-    BNB: {
-        balance: '0.31392916',
-        balance_in_usd: '140.29'
-    },
-    BUSD: {
-        balance: '2',
-        balance_in_usd: '2.00'
-    },
-    //...
+  BNB: { balance_in_usd: '1.87 ', balance: '0.004477912626247038' },
+  currency: 'bnb',
+  status: true,
+  address: '0x39Bce682DBFe79a0b940c8E833aaf2ab08098816',
+  '1Gas.org': { balance: '92,280' },
+  'AGMC.io': { balance: '800,000' },
+  ANTEX: { balance: '160' },
+  'ARKR.org': { balance: '800,000' },
+  'AZSwap.io': { balance: '18,000' },
+  BIG: { balance: '0.4' },
+  BTL: { balance: '20' },
+  BNBw: { balance: '21,131,181' },
+  MELLO: { balance: '17,777' },
+  CHILL: { balance: '5' },
+  'Def8.io': { balance: '82,445' },
+  DBT: { balance: '440' },
+  'FF18.io': { balance: '800,000' },
+  'KK8.io': { balance: '166,574' },
+  'LinkP.io': { balance: '800,000' },
+  MRS: { balance: '22.8' },
+  'MMdex.io': { balance: '250,000' },
+  MGRT: { balance: '1.1198' },
+  'PDot.io': { balance: '95,641' },
+  'PowNFT.net': { balance: '96,816.55' },
+  ABOYS: { balance: '18,000,000' },
+  ROCKETDOGE: { balance: '250,000,000' },
+  'Zepe.io': { balance: '750,000' }
 }
 ```
