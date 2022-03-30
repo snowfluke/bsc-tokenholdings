@@ -1,6 +1,6 @@
 {
   "name": "bsc-tokenholdings",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "NPM pakcage to scan token holdings in a Binance Smart Chain (BSC) Wallet Address",
   "main": "index.js",
   "scripts": {

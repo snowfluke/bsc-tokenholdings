@@ -30,12 +30,8 @@ const fetchToken = async (address, type) => {
     const { price_usd } = await getPrice(type);
     if (!price_usd)
       return { status: false, error_msg: `Failed to fetch ${type} price` };
-    // https://bscscan.com/address/0x41bD5eB13b30ffd89AFf8e745f714F5A24F080E0
     const { data } = await axios.get(`${types[type].site}/address/${address}`);
 
-    // const content = JSON.parse(await data.Content);
-
-    // tempusd = content.totalusd;
     return cheerio.load(data, null, false);
   } catch (error) {
     return { status: false, error_msg: "Empty wallet" };
@@ -58,7 +54,7 @@ const scan = async (address, currency) => {
       return { status: false, error_msg: "Invalid type of currency" };
 
     const $ = await fetchToken(address, type);
-    // if ($.status === false) return { status: false, error_msg: $.error_msg };
+    if ($.status === false) return { status: false, error_msg: $.error_msg };
 
     let usdVal = $("div.col-md-8")["1"].children[0].data;
     let typeVal = $("div.col-md-8")["0"];
@@ -85,7 +81,7 @@ const scan = async (address, currency) => {
 
     return wallet;
   } catch (error) {
-    console.log(error.message);
+    console.log(error);
     return { status: false, error_msg: "Empty wallet" };
   }
 };
