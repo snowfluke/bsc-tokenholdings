@@ -34,6 +34,7 @@ const fetchToken = async (address, type) => {
 
     return cheerio.load(data, null, false);
   } catch (error) {
+    console.log(error);
     return { status: false, error_msg: "Empty wallet" };
   }
 };
@@ -86,4 +87,4 @@ const scan = async (address, currency) => {
   }
 };
 
-module.exports = scan;
+module.exports = { scan };
