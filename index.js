@@ -15,6 +15,18 @@ const types = {
     site: "https://polygonscan.com",
   },
 };
+const userAgent = [
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36",
+  "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/72.0.3626.121 Safari/537.36",
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.157 Safari/537.36",
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36",
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36",
+  "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36",
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36",
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36",
+  "Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.90 Safari/537.36",
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36",
+];
 
 const getPrice = async (type) => {
   const res = await axios.get(
@@ -28,13 +40,20 @@ const getPrice = async (type) => {
 const fetchToken = async (address, type) => {
   try {
     const { price_usd } = await getPrice(type);
+    let agentId = Math.floor(Math.random() * userAgent.length);
     if (!price_usd)
       return { status: false, error_msg: `Failed to fetch ${type} price` };
-    const { data } = await axios.get(`${types[type].site}/address/${address}`);
+    const res = await axios.get(`${types[type].site}/address/${address}`, {
+      headers: {
+        "User-Agent": userAgent[agentId],
+      },
+    });
+
+    if (res.status === 403) throw new Error("Blocked by Cloudflare");
+    const data = await res.data;
 
     return cheerio.load(data, null, false);
   } catch (error) {
-    console.log(error);
     return { status: false, error_msg: "Empty wallet" };
   }
 };
@@ -82,7 +101,6 @@ const scan = async (address, currency) => {
 
     return wallet;
   } catch (error) {
-    console.log(error);
     return { status: false, error_msg: "Empty wallet" };
   }
 };

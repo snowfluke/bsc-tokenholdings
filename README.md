@@ -17,7 +17,7 @@ Or
 ## Usage
 
 ```js
-const scan = require("bsc-tokenholdings");
+const { scan } = require("bsc-tokenholdings");
 const address = "0x39Bce682DBFe79a0b940c8E833aaf2ab08098816";
 
 async function test() {
